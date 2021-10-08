@@ -9,12 +9,12 @@ IEEE 802.3 Ethernet frame format
 
 
     |SFD: Start frame delimiter flag ( 10101011 ) |
-    ------------------------------------------------------------
+    |------------------------------------------------------------|
     | Preamble | SFD | Destination address | Source address | Length, type | Data + Padding | CRC
     |  7bytes  |1byte|       6 bytes       |     6 bytes    |    2 bytes   |                | 4 bytes
 
     |maximum and minimum lengths|
-    ----------------------------------------------------------------------------
+    |----------------------------------------------------------------------------|
     | Destination address | Source address | length PDU |     Data and Padding     |    CRC    |
     |       6 bytes       |     6 bytes    |   2 bytes  |                          |  4 bytes  |
 
