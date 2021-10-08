@@ -30,7 +30,7 @@ Address : 6 bytes
 
 
 *Sender:*
-    *Send () -> 
+    ##Send () -> ##
         ** invoked every timeslot once
         ** conditions
             * do nothing 
@@ -39,28 +39,28 @@ Address : 6 bytes
 
         ** consider current network time measure in time slots
 
-    *Recv_Ack () ->
+    ##Recv_Ack () ->##
         ** invoked when ack is received
         ** time stamp when ack is received is considered
         ** calls timout function
 
-    *Timeout () -> 
+    ##Timeout () -> ##
         ** called by the Ack method
         ** computes the most recent data packet's round trip time
         ** recompute the value of timeout
 
 *Reciever:* 
-    *Recv () -> 
+    ##Recv () -> ##
         ** invoked after receiving data frame from the sender
     
-    *Send_Ack () -> 
+    ##Send_Ack () -> 
         ** builds the ACK and transmit
 
 *Sliding window:*
     ** maximum number of unacknowledged frames cannot exceed window size
     ** 
 
-    # Performance metrics 
+    # Performance metrics #
     Receiver Throughput [ packets per slot ]
     RTT
     bandwidth-delay product
