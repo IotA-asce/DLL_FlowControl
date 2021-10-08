@@ -8,13 +8,13 @@ The workspace contains two folders by default, where:
 IEEE 802.3 Ethernet frame format
 
 
-    SFD: Start frame delimiter flag ( 10101011 )
+    |SFD: Start frame delimiter flag ( 10101011 ) |
+    ------------------------------------------------------------
+    | Preamble | SFD | Destination address | Source address | Length, type | Data + Padding | CRC
+    |  7bytes  |1byte|       6 bytes       |     6 bytes    |    2 bytes   |                | 4 bytes
 
-   | Preamble | SFD | Destination address | Source address | Length, type | Data + Padding | CRC
-   |  7bytes  |1byte|       6 bytes       |     6 bytes    |    2 bytes   |                | 4 bytes
-
-    maximum and minimum lengths
-
+    |maximum and minimum lengths|
+    ----------------------------------------------------------------------------
     | Destination address | Source address | length PDU |     Data and Padding     |    CRC    |
     |       6 bytes       |     6 bytes    |   2 bytes  |                          |  4 bytes  |
 
@@ -29,8 +29,8 @@ Address : 6 bytes
     ex : 06 : 01 : 02 : 01 : 2C : 4B
 
 
-Sender:
-    Send () -> 
+*Sender:*
+    *Send () -> 
         ** invoked every timeslot once
         ** conditions
             * do nothing 
@@ -39,28 +39,28 @@ Sender:
 
         ** consider current network time measure in time slots
 
-    Recv_Ack () ->
+    *Recv_Ack () ->
         ** invoked when ack is received
         ** time stamp when ack is received is considered
         ** calls timout function
 
-    Timeout () -> 
+    *Timeout () -> 
         ** called by the Ack method
         ** computes the most recent data packet's round trip time
         ** recompute the value of timeout
 
-Reciever: 
-    Recv () -> 
+*Reciever:* 
+    *Recv () -> 
         ** invoked after receiving data frame from the sender
     
-    Send_Ack () -> 
+    *Send_Ack () -> 
         ** builds the ACK and transmit
 
-Sliding window:
+*Sliding window:*
     ** maximum number of unacknowledged frames cannot exceed window size
     ** 
 
-*** Performance metrics ***
+    # Performance metrics 
     Receiver Throughput [ packets per slot ]
     RTT
     bandwidth-delay product
