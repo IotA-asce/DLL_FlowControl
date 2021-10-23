@@ -1,8 +1,8 @@
+package utilities;
+
 import java.util.ArrayList;
 
 public class Helper {
-    
-    
     public static void main(String[] args) {
         
         String CRC = "x32+x26+x23+x22+x16+x12+x11+x10+x8+x7+x5+x4+x2+x+1";

@@ -1,3 +1,4 @@
+package dump;
 import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileWriter;
