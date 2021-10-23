@@ -1,5 +1,7 @@
 package channel;
 
+import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.ServerSocket;
@@ -11,39 +13,47 @@ public class Receiver {
     private ServerSocket serverSocket;
     private DataInputStream dis;
     private DataOutputStream dos;
+    private BufferedReader br;
     private final int PORT = 5000;
 
-    public String Recv() {
+    public String Recv (String data) {
 
         try {
-
+            
             serverSocket = new ServerSocket(PORT);
             socket = serverSocket.accept();
             dis = new DataInputStream(socket.getInputStream());
             dos = new DataOutputStream(socket.getOutputStream());
+            br = new BufferedReader(new InputStreamReader(System.in));
 
-            String str1 = ""; // data from input
+            String str1 = data;                       // data from input
             String str2 = "";
 
-            str1 = dis.readUTF();
-            dos.writeUTF(str2);
-            dos.flush();
+            while(!str1.equalsIgnoreCase("stop")){
+                
+                str1 = dis.readUTF();
+                System.out.println("Client says: " + str1);
+                str2 = br.readLine();
+
+                dos.writeUTF(str2);
+                dos.flush();
+            }
 
             dis.close();
             socket.close();
             serverSocket.close();
 
-            return str1;
-
         } catch (Exception e) {
-
+ 
             e.printStackTrace();
             System.out.println("\n\nerror\n\n_____________________________________________________________\n\n");
-
+ 
         }
 
-        return "";
+        return data;
     }
 
-
+    public String Send_Ack () {
+        return "";
+    }
 }

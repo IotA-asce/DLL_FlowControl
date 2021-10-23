@@ -1,7 +1,5 @@
-
-public class App {
-    public static void main(String[] args) throws Exception {
-        
+public class InitiateSender {
+    public static void main(String[] args) {
         System.out.println("\n\n:::::::::::::::::::::::::::::::initiating packet delivery:::::::::::::::::::::::::::::::");
         System.out.println("________________________________________________________________________________________\n\n");
 
