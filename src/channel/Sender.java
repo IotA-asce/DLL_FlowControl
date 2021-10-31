@@ -30,6 +30,7 @@ public class Sender {
             return str2;
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Error on sender side");
         }
 

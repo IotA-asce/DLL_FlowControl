@@ -7,6 +7,8 @@ import java.util.Date;
 
 
 import channel.Receiver;
+import channel.Sender;
+import utilities.Helper;
 
 public class RControl {
     private String frame = "";
@@ -16,6 +18,15 @@ public class RControl {
     private String data = "";
     private String crc = "";
     // private String acknowledgement = "";
+
+
+    /* 
+       ***************************************** 
+    
+    Receiver controller function controlling the flow with no restriction 
+
+       *****************************************
+    */
 
     public void controlReceiver() {
         while (true) {
@@ -36,6 +47,33 @@ public class RControl {
             // }
         }
     }
+
+
+    /* 
+       *****************************************
+
+        Receiver control function controlling the flow of data in Stop and wait format
+        # stop and wait format implementation here
+
+       *****************************************
+    */
+
+    public void controlReceiverSTOP_N_WAIT(){
+
+        ReceiveFrame();
+        ExtractData();
+        DeliverData();
+        SendAck();   
+
+    }
+
+    /* 
+       *****************************************
+    
+        # delay function acting as a buffer to control the early completion of a mechanism
+
+       *****************************************
+    */
 
     public void WaitForEvent() {
         Date date = new Date();
@@ -61,12 +99,51 @@ public class RControl {
 
     }
 
+
+    /* 
+       *****************************************
+
+        receive frame function calls the Receiver's Receive function in the Receive class
+        implementing a socket connection
+
+       *****************************************
+    */
+
     public void ReceiveFrame() {
         Receiver receiver = new Receiver();
         System.out.println("\n\n\twaiting for sender...");
         this.frame = receiver.Recv();
     }
+
+    /*
+        *****************************************
+        
+        sends acknowledgement on the basis of the CRC validation
+        
+        *****************************************
+    */
     
+    public void SendAck(){
+        Sender sender = new Sender();
+        Helper helper = new Helper();
+
+        sender.Send(helper.createAcknowledgement(validateCRC()));
+    }
+
+    /*
+        *****************************************
+
+        the ExtractData() function trims the data frame received into the following 
+
+            * destination address
+            * source address
+            * data length
+            * data
+            * CRC
+
+        *****************************************
+    */
+
     public void ExtractData() {
         
         System.out.println("------Extracting data..");
@@ -123,6 +200,15 @@ public class RControl {
         printStatus(1);
     }
 
+    /*
+        *****************************************
+
+        the DeliverData() function stores the frame received in a file with 
+        the name formatted to the time stamp at which the frame was received
+
+        *****************************************
+    */
+
     public void DeliverData() {
         
         // store the data in another file
@@ -160,6 +246,19 @@ public class RControl {
 
     }
 
+
+    /*
+   
+        *****************************************
+        
+        a utility function that converts a given binary string to decimal
+
+        argument type : String
+        return type : integer (int_64)
+
+        *****************************************
+    */
+
     private int binaryToDecimal(String binary) {
         final int FACTOR = 2;
         int multiplicant = 1;
@@ -181,6 +280,15 @@ public class RControl {
         return number;
     }
 
+
+    /*
+        *****************************************
+
+        a utility function for printing status wrt code received
+
+        *****************************************
+    */
+
     private void printStatus(int status_code){
         switch (status_code) {
             case 0:
@@ -192,5 +300,19 @@ public class RControl {
             default:
                 break;
         }
+    }
+
+    /*
+        *****************************************
+
+        utility function to validate CRC and send response in boolean format
+
+        *****************************************
+    */
+
+    public boolean validateCRC(){
+        
+        String tcrc = new Helper().createCRC(this.data);
+        return tcrc.equals(this.crc) ? true : false;
     }
 }

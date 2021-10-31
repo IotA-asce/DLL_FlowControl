@@ -3,11 +3,21 @@ package controllers;
 import java.util.Date;
 import java.util.Random;
 
+import channel.Receiver;
 import channel.Sender;
+import utilities.Helper;
 
 public class SControl {
     private String data = "";
     private String frame = "";
+
+    /*
+        ###############################################################
+
+        implementing the dataflow without acknowledgement
+
+        ###############################################################
+    */
 
     public void controlSender() {
         while (true) {
@@ -28,20 +38,48 @@ public class SControl {
             SendFrame();
 
 
-            /* 
-            
-            # the validation feedback and timestamp is required here
-            timestamp is created at the begining of the process and calculated if it exceeds the 30s threshold
-
-            */
-
-            // }
         }
     }
 
-    // private boolean Event() {
-    //     return false;
-    // }
+
+    /* 
+        ###################################################################
+
+        control sender with stop and wait for acknowledment handling
+
+        ###################################################################
+    */
+
+    public void controlSender_STOP_N_WAIT(){
+        boolean canSend = true;                     // for first frame to be send
+        
+        while (true) {
+            // wait for event
+
+            if(canSend){
+                GetData();
+                MakeFrame();
+                SendFrame();
+                canSend = false;
+            }
+
+            // recieve acknowledgement
+            ReceiveAck();
+            canSend = true;                         // can send is changed to true on the basis of the
+                                                    // acknowledgement received
+        }
+    }
+
+
+    public boolean ReceiveAck(){
+        
+        Receiver receiver = new Receiver();
+        String ack = receiver.Recv();
+        Helper helper = new Helper();
+
+        return helper.validateAcknowledgement(ack);
+
+    }
 
 
     public void WaitForEvent() {
@@ -169,11 +207,13 @@ public class SControl {
 
     }
 
-    public void SendFrame() {
+    public boolean SendFrame() {
         
         Sender sender = new Sender();
 
         sender.Send(this.frame);
+
+        return true;
     }
 
 

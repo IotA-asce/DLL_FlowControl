@@ -8,6 +8,7 @@ public class ISender {
         System.out.println("________________________________________________________________________________________\n\n");
 
         SControl sControl = new SControl();
-        sControl.controlSender();
+        // sControl.controlSender();
+        sControl.controlSender_STOP_N_WAIT();
     }
 }

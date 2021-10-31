@@ -8,6 +8,7 @@ public class IReceiver {
         System.out.println("________________________________________________________________________________________\n\n");
 
         RControl rControl = new RControl();
-        rControl.controlReceiver();
+        // rControl.controlReceiver();
+        rControl.controlReceiverSTOP_N_WAIT();
     }
 }
