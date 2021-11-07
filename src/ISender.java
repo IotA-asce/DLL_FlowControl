@@ -9,6 +9,7 @@ public class ISender {
 
         SControl sControl = new SControl();
         // sControl.controlSender();
-        sControl.controlSender_STOP_N_WAIT();
+        // sControl.controlSender_STOP_N_WAIT();
+        sControl.controlSender_STOP_N_WAIT_ARQ();
     }
 }

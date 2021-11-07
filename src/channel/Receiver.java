@@ -46,4 +46,37 @@ public class Receiver {
     }
 
 
+    public String Recv(int port) {
+
+        try {
+
+            serverSocket = new ServerSocket(port);
+            socket = serverSocket.accept();
+            dis = new DataInputStream(socket.getInputStream());
+            dos = new DataOutputStream(socket.getOutputStream());
+
+            String str1 = ""; // data from input
+            String str2 = "";
+
+            str1 = dis.readUTF();
+            dos.writeUTF(str2);
+            dos.flush();
+
+            dis.close();
+            socket.close();
+            serverSocket.close();
+
+            return str1;
+
+        } catch (Exception e) {
+
+            e.printStackTrace();
+            System.out.println("\n\nerror\n\n_____________________________________________________________\n\n");
+
+        }
+
+        return "";
+    }
+
+
 }

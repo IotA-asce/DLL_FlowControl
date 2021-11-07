@@ -110,7 +110,7 @@ public class Helper {
             }
         }
 
-        return evenCount > oddCount ? false : true;
+        return evenCount > oddCount ? true : false;
     }
 
     public String createAcknowledgement(boolean isValidated) {

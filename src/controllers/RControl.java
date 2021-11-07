@@ -60,12 +60,31 @@ public class RControl {
 
     public void controlReceiverSTOP_N_WAIT(){
 
-        ReceiveFrame();
-        ExtractData();
-        DeliverData();
-        SendAck();   
+        while(true){
+            ReceiveFrame();
+            ExtractData();
+            DeliverData();
+            SendAck();  
+        } 
 
     }
+
+    
+    public void controlReceiver_STOP_N_WAIT_ARQ() throws InterruptedException{
+        int Rn = 0;
+
+        while (true) {
+            ReceiveFrame();
+            ExtractData();
+            if(!validateCRC()){
+                Thread.sleep(500);
+            }
+            
+            DeliverData();
+            SendAck();
+        }
+    }
+
 
     /* 
        *****************************************
@@ -127,7 +146,7 @@ public class RControl {
         Sender sender = new Sender();
         Helper helper = new Helper();
 
-        sender.Send(helper.createAcknowledgement(validateCRC()));
+        sender.Send(helper.createAcknowledgement(validateCRC()), 6000);
     }
 
     /*
