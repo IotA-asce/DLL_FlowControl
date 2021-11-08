@@ -12,5 +12,6 @@ public class ISender {
         // sControl.controlSender_STOP_N_WAIT();
         // sControl.controlSender_STOP_N_WAIT_ARQ();
         sControl.controlSender_GO_BACK_N();
+        // sControl.controlSender_SELECTIVE_REPEAT_ARQ();
     }
 }

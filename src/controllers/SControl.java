@@ -21,10 +21,13 @@ public class SControl {
      */
 
     public void controlSender() {
-        while (true) {
-            // WaitForEvent();
+        int __FRAME_LIMIT = 50;
+        long timeThen = new Date().getTime();
+        int countFrame = 0;
 
-            // if(Event(RequestToSend)){
+        while (countFrame < __FRAME_LIMIT) {
+
+            System.out.println("working on frame no " + (countFrame + 1));
             System.out.println("\nobtaining data...");
             // WaitForEvent();
             GetData();
@@ -37,8 +40,12 @@ public class SControl {
             System.out.println("\nsending frame...");
             // WaitForEvent();
             SendFrame();
-
+            countFrame++;
         }
+
+        long timeNow = new Date().getTime();
+
+        System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds\n\n");
     }
 
     /*
@@ -52,8 +59,13 @@ public class SControl {
     public void controlSender_STOP_N_WAIT() {
         boolean canSend = true; // for first frame to be send
 
-        while (true) {
-            // wait for event
+        int __FRAME_LIMIT = 50;
+        long timeThen = new Date().getTime();
+        int countFrame = 0;
+
+        while (countFrame < __FRAME_LIMIT) {
+
+            System.out.println("working on frame no " + (countFrame + 1));
 
             if (canSend) {
                 GetData();
@@ -67,28 +79,41 @@ public class SControl {
             // canSend = true; // can send is changed to true on the basis of the
             // acknowledgement received
 
-            System.out.println("Acknowledgement status here : " + canSend);
+            countFrame++;
+            // System.out.println("Acknowledgement status here : " + canSend);
         }
+
+        long timeNow = new Date().getTime();
+
+        System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds\n\n");
+        // System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds");
     }
 
-    public void controlSender_STOP_N_WAIT_ARQ() {
+    public void controlSender_STOP_N_WAIT_ARQ() throws IllegalThreadStateException{
 
         int Sn = 0;
         boolean canSend = true;
 
-        String sSn ="";
+        String sSn = "";
 
-        while (true) {
+        int __FRAME_LIMIT = 50;
+        long timeThen = new Date().getTime();
+        int countFrame = 0;
 
+        while (countFrame < __FRAME_LIMIT) {
+
+            System.out.println("working on frame no " + (countFrame + 1));
+            
             Thread threadTimer = new Thread(this::Timer);
 
             boolean canJump = false;
 
             while (!canJump) {
+                
 
                 if (canSend) {
 
-                    if(!canJump){
+                    if (!canJump) {
                         GetData();
                         MakeFrame();
                         // StoreFrame(); // keep a copy
@@ -127,22 +152,28 @@ public class SControl {
 
             }
 
+            countFrame++;
+
         }
+
+        long timeNow = new Date().getTime();
+
+        System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds\n\n");
+        // System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds");
 
     }
 
-    public void controlSender_GO_BACK_N(){
+    public void controlSender_GO_BACK_N() {
         int __N = 4;
         int __INITIAL_INDEX = 0;
-        int __FRAME_LIMIT = 10;
+        int __FRAME_LIMIT = 50;
 
         ArrayList<String> window = new ArrayList<>();
-        
-        
+
         long timeThen = new Date().getTime();
         int countFrame = 0;
 
-        for(int i = 0; i < __N; i++){
+        for (int i = 0; i < __N; i++) {
             GetData();
             window.add(this.data);
         }
@@ -152,88 +183,87 @@ public class SControl {
             System.out.println("working on frame no " + (countFrame + 1));
 
             // window over the current slot
-            for(int i = 0; i < window.size(); i++){
+            for (int i = 0; i < window.size(); i++) {
                 this.data = window.get(i);
 
                 MakeFrame();
                 SendFrame();
 
-                if(!ReceiveAck()){
+                if (!ReceiveAck()) {
                     i = __INITIAL_INDEX;
                 }
             }
 
-            // considering all acknowledgements were validated 
+            // considering all acknowledgements were validated
             // we remove the first element and add another element
             window.remove(__INITIAL_INDEX);
             GetData();
-            window.add(this.data); 
-            countFrame++;           
+            window.add(this.data);
+            countFrame++;
 
         }
 
         long timeNow = new Date().getTime();
 
-        System.out.println( __FRAME_LIMIT + " frames took " + ((timeNow - timeThen)/1000) + " seconds");
+        System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds\n\n");
+        // System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds");
 
     }
 
-    public void controlSender_SELECTIVE_REPEAT_ARQ(){
-        int __N = 4;
+    public void controlSender_SELECTIVE_REPEAT_ARQ() {
         int __INITIAL_INDEX = 0;
-        int __FRAME_LIMIT = 10;
-
+        int __N = 4;
         ArrayList<String> window = new ArrayList<>();
-        
-        long timeThen = new Date().getTime();
-        int countFrame = 0;
 
-        for(int i = 0; i < __N; i++){
+        for (int i = 0; i < __N; i++) {
             GetData();
             window.add(this.data);
         }
+
+        int __FRAME_LIMIT = 50;
+        long timeThen = new Date().getTime();
+        int countFrame = 0;
 
         while (countFrame < __FRAME_LIMIT) {
 
             System.out.println("working on frame no " + (countFrame + 1));
 
             // window over the current slot
-            for(int i = 0; i < window.size(); i++){
+            for (int i = 0; i < window.size(); i++) {
                 this.data = window.get(i);
 
                 MakeFrame();
                 SendFrame();
 
-                if(!ReceiveAck()){
-                    i--;                // only current frame is repeated and not the complete window 
+                if (!ReceiveAck()) {
+                    i--; // only current frame is repeated and not the complete window
                 }
             }
 
-            // considering all acknowledgements were validated 
+            // considering all acknowledgements were validated
             // we remove the first element and add another element
             window.remove(__INITIAL_INDEX);
             GetData();
-            window.add(this.data); 
-            countFrame++;           
+            window.add(this.data);
+            countFrame++;
 
         }
 
         long timeNow = new Date().getTime();
 
-        System.out.println( __FRAME_LIMIT + " frames took " + ((timeNow - timeThen)/1000) + " seconds");
+        System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds\n\n");
+        // System.out.println(__FRAME_LIMIT + " frames took " + ((timeNow - timeThen) / 1000) + " seconds");
     }
 
     // * * * * * * *
 
-
     /*
-        ############################################################
-
-        
-
-        ############################################################
-    */
-
+     * ############################################################
+     * 
+     * 
+     * 
+     * ############################################################
+     */
 
     private void Timer() {
 

@@ -10,7 +10,10 @@ public class IReceiver {
         RControl rControl = new RControl();
         // rControl.controlReceiver();
         // rControl.controlReceiverSTOP_N_WAIT();
-        rControl.controlReceiver_STOP_N_WAIT_ARQ();
+        // rControl.controlReceiver_STOP_N_WAIT_ARQ();
         rControl.controlReceiver_GO_BACK_N();
+        // rControl.controlReceiver_SELECTIVE_REPEAT();
+        
+    
     }
 }

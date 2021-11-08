@@ -30,7 +30,7 @@ public class RControl {
 
     public void controlReceiver() {
         while (true) {
-            WaitForEvent();
+            // WaitForEvent();
             // if (Event(ArrivalNotification)) {
             
             ReceiveFrame();
