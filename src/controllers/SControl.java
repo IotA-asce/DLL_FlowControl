@@ -1,5 +1,6 @@
 package controllers;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Random;
 
@@ -25,16 +26,16 @@ public class SControl {
 
             // if(Event(RequestToSend)){
             System.out.println("\nobtaining data...");
-            WaitForEvent();
+            // WaitForEvent();
             GetData();
 
             System.out.println("\ncreating frame...");
-            WaitForEvent();
+            // WaitForEvent();
             MakeFrame();
             // System.out.println("\nGenerated frame : " + frame);
 
             System.out.println("\nsending frame...");
-            WaitForEvent();
+            // WaitForEvent();
             SendFrame();
 
         }
@@ -130,6 +131,98 @@ public class SControl {
 
     }
 
+    public void controlSender_GO_BACK_N(){
+        int __N = 4;
+        int __INITIAL_INDEX = 0;
+        int __FRAME_LIMIT = 10;
+
+        ArrayList<String> window = new ArrayList<>();
+        
+        
+        long timeThen = new Date().getTime();
+        int countFrame = 0;
+
+        for(int i = 0; i < __N; i++){
+            GetData();
+            window.add(this.data);
+        }
+
+        while (countFrame < __FRAME_LIMIT) {
+
+            System.out.println("working on frame no " + (countFrame + 1));
+
+            // window over the current slot
+            for(int i = 0; i < window.size(); i++){
+                this.data = window.get(i);
+
+                MakeFrame();
+                SendFrame();
+
+                if(!ReceiveAck()){
+                    i = __INITIAL_INDEX;
+                }
+            }
+
+            // considering all acknowledgements were validated 
+            // we remove the first element and add another element
+            window.remove(__INITIAL_INDEX);
+            GetData();
+            window.add(this.data); 
+            countFrame++;           
+
+        }
+
+        long timeNow = new Date().getTime();
+
+        System.out.println( __FRAME_LIMIT + " frames took " + ((timeNow - timeThen)/1000) + " seconds");
+
+    }
+
+    public void controlSender_SELECTIVE_REPEAT_ARQ(){
+        int __N = 4;
+        int __INITIAL_INDEX = 0;
+        int __FRAME_LIMIT = 10;
+
+        ArrayList<String> window = new ArrayList<>();
+        
+        long timeThen = new Date().getTime();
+        int countFrame = 0;
+
+        for(int i = 0; i < __N; i++){
+            GetData();
+            window.add(this.data);
+        }
+
+        while (countFrame < __FRAME_LIMIT) {
+
+            System.out.println("working on frame no " + (countFrame + 1));
+
+            // window over the current slot
+            for(int i = 0; i < window.size(); i++){
+                this.data = window.get(i);
+
+                MakeFrame();
+                SendFrame();
+
+                if(!ReceiveAck()){
+                    i--;                // only current frame is repeated and not the complete window 
+                }
+            }
+
+            // considering all acknowledgements were validated 
+            // we remove the first element and add another element
+            window.remove(__INITIAL_INDEX);
+            GetData();
+            window.add(this.data); 
+            countFrame++;           
+
+        }
+
+        long timeNow = new Date().getTime();
+
+        System.out.println( __FRAME_LIMIT + " frames took " + ((timeNow - timeThen)/1000) + " seconds");
+    }
+
     // * * * * * * *
 
 
@@ -195,7 +288,7 @@ public class SControl {
         String tData = "";
         Random rand = new Random();
 
-        int length_diff = rand.nextInt(11632); // difference between the maximum and minimum data length
+        int length_diff = rand.nextInt(2048); // difference between the maximum and minimum data length
         int baseLength = 368;
 
         int len = baseLength + length_diff;

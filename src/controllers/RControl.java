@@ -85,6 +85,33 @@ public class RControl {
         }
     }
 
+    public void controlReceiver_GO_BACK_N() throws InterruptedException{
+        
+        while(true){
+            ReceiveFrame();
+            ExtractData();
+
+            if(validateCRC()){
+                DeliverData();
+            }
+    
+            SendAck();
+        }
+
+    }
+
+    public void controlReceiver_SELECTIVE_REPEAT() throws InterruptedException{
+        while(true){
+            ReceiveFrame();
+            ExtractData();
+
+            if(validateCRC()){
+                DeliverData();
+            }
+    
+            SendAck();
+        }
+    }
 
     /* 
        *****************************************
